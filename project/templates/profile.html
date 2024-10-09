@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
+    
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Date of Birth:</strong> {{ user.user_profile.date_of_birth }}</p> <!-- Use user_profile to access related profile -->
+    <p><strong>Qualification:</strong> {{ user.user_profile.qualification }}</p>
+    <p><strong>Reading Preferences:</strong> {{ user.user_profile.reading_preferences }}</p>
+    <p><strong>Address:</strong> {{ user.user_profile.address }}</p>
+    
+    <h2>Profile Picture:</h2>
+    {% if user.user_profile.profile_picture %}
+        <img src="{{ user.user_profile.profile_picture.url }}" alt="Profile Picture" width="150px">
+    {% else %}
+        <p>No profile picture uploaded.</p>
+    {% endif %}
+    
+    <h2>Document:</h2>
+    {% if user.user_profile.document %}
+        <a href="{{ user.user_profile.document.url }}" target="_blank">Download Document</a>
+    {% else %}
+        <p>No document uploaded.</p>
+    {% endif %}
+
+    <!-- Example Form for Editing Profile -->
+    <h2>Edit Profile</h2>
+    <form action="{% url 'update_profile' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label for="date_of_birth">Date of Birth:</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ user.user_profile.date_of_birth|date:'Y-m-d' }}"><br>
+        
+        <label for="qualification">Qualification:</label>
+        <input type="text" id="qualification" name="qualification" value="{{ user.user_profile.qualification }}"><br>
+        
+        <label for="reading_preferences">Reading Preferences:</label>
+        <textarea id="reading_preferences" name="reading_preferences">{{ user.user_profile.reading_preferences }}</textarea><br>
+        
+        <label for="address">Address:</label>
+        <textarea id="address" name="address">{{ user.user_profile.address }}</textarea><br>
+        
+        <label for="profile_picture">Profile Picture:</label>
+        <input type="file" id="profile_picture" name="profile_picture"><br>
+        
+        <label for="document">Document:</label>
+        <input type="file" id="document" name="document"><br>
+        
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <!-- Add more user-specific content here -->
+
+</body>
+</html>
